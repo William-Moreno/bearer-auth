@@ -11,7 +11,7 @@ authRouter.post('/signup', async (req, res, next) => {
   try {
     let user = new User(req.body);
     const userRecord = await user.save(req.body);
-    const token = jwt.sign(user.toJSON(), process.env.SECRET, { expiresIn: 54000 });
+    const token = jwt.sign(user.toJSON(), process.env.SECRET, { expiresIn: 300 });
     const output = {
       user: userRecord,
       token: token,

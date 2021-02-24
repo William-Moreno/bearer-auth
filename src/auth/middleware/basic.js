@@ -5,7 +5,7 @@ const User = require('../models/users.js');
 
 module.exports = async (req, res, next) => {
 
-  if (!req.headers.authorization) { return _authError(); }
+  if (!req.headers.authorization) { next('Invalid Login'); }
 
   let basic = req.headers.authorization.split(' ');
   let encodedString = basic.pop();

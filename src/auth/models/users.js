@@ -15,7 +15,7 @@ users.virtual('token').get(function () {
   let tokenObject = {
     username: this.username,
   };
-  return jwt.sign(tokenObject);
+  return jwt.sign(tokenObject, process.env.SECRET);
 });
 
 users.pre('save', async function () {

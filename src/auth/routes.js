@@ -2,7 +2,7 @@
 
 const express = require('express');
 const authRouter = express.Router();
-
+const jwt = require('jsonwebtoken');
 const User = require('./models/users.js');
 const basicAuth = require('./middleware/basic.js');
 const bearerAuth = require('./middleware/bearer.js');
@@ -10,14 +10,16 @@ const bearerAuth = require('./middleware/bearer.js');
 authRouter.post('/signup', async (req, res, next) => {
   try {
     let user = new User(req.body);
-    const userRecord = await user.save();
+    const userRecord = await user.save(req.body);
+    const token = jwt.sign(user, process.env.SECRET);
     const output = {
       user: userRecord,
-      token: userRecord.token,
+      token: token,
     };
-    res.status(200).json(output);
+    res.status(201).json(output);
   } catch (e) {
-    next(e.message);
+    console.log('Herein lies the problem ', e.message);
+    res.status(403).send('Error Creating User');
   }
 });
 

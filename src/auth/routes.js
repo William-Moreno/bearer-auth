@@ -11,14 +11,13 @@ authRouter.post('/signup', async (req, res, next) => {
   try {
     let user = new User(req.body);
     const userRecord = await user.save(req.body);
-    const token = jwt.sign(user, process.env.SECRET);
+    const token = jwt.sign(user.toJSON(), process.env.SECRET);
     const output = {
       user: userRecord,
       token: token,
     };
     res.status(201).json(output);
   } catch (e) {
-    console.log('Herein lies the problem ', e.message);
     res.status(403).send('Error Creating User');
   }
 });

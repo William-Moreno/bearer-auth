@@ -7,15 +7,24 @@ module.exports = async (req, res, next) => {
 
   if (!req.headers.authorization) { return _authError(); }
 
-  let basic = req.headers.authorization;
-  let [user, pass] = base64.decode(basic).split(':');
+  let basic = req.headers.authorization.split(' ');
+  let encodedString = basic.pop();
+  let decodedString = base64.decode(encodedString);
+  let [user, pass] = decodedString.split(':');
 
   try {
-    req.user = await User.authenticateBasic(user, pass)
-    next();
-  } catch (e) {
+
+    const validUser = await User.authenticateBasic(user, pass);
+
+    if(validUser) {
+      req.user = validUser;
+      next();
+    } else {
+      next('Invalid User');
+    } 
+  }catch (e) {
     res.status(403).send('Invalid Login');
   }
 
-}
+};
 

@@ -29,8 +29,6 @@ users.statics.authenticateBasic = async function (username, password) {
   const user = await this.findOne({ username: username });
   const valid = await bcrypt.compare(password, user.password);
 
-  console.log(user, valid);
-
   if (valid) {
     return user;
   } else {
